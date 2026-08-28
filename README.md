@@ -24,6 +24,13 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 # открыть документацию: http://localhost:8000/docs
 ```
+## Модели
+```
+.venv\Scripts\Activate.ps1
+python view.py bracket 80 50 10 15     # пластина 80×50, толщина 10, дырка 15
+python view.py box 40 30 5             # просто параллелепипед
+python view.py                        # оба образца рядом
+```
 
 ## Эндпоинты
 | Метод | Путь | Описание |
