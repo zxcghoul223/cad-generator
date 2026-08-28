@@ -5,18 +5,18 @@ FastAPI-сервис, который генерирует 3D-детали по �
 CAD-автоматизации.
 
 ## Stack
-- FastAPI — REST API
-- CadQuery — параметрическое 3D-моделирование
-- SQLAlchemy + SQLite — история генераций
-- Docker — контейнеризация
-- pytest + TestClient — тесты
+- FastAPI = REST API
+- CadQuery параметрическое 3D-моделирование
+- SQLAlchemy + SQLite = история генераций
+- Docker = контейнеризация
+- pytest + TestClient = тесты
 
 ## Установка
 ```bash
 python -m venv .venv && .venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 ```
-> CadQuery тянет за собой pythonocc — установка может занять пару минут.
+> CadQuery тянет за собой pythonocc, установка может занять пару минут.
 > Python 3.10/3.11 рекомендуется.
 
 ## Запуск
