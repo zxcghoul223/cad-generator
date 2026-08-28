@@ -16,11 +16,13 @@ import cad_builder
 SAMPLES = {
     "box": {"w": 40, "h": 30, "t": 5},
     "bracket": {"w": 40, "h": 30, "t": 5, "hole_d": 8},
+    "star": {"points": 5, "r_out": 40, "r_in": 16, "t": 5},
 }
 
 PARAM_KEYS = {
     "box": ["w", "h", "t"],
     "bracket": ["w", "h", "t", "hole_d"],
+    "star": ["points", "r_out", "r_in", "t"],
 }
 
 

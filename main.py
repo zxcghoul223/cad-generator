@@ -25,6 +25,7 @@ TMP = os.getenv("TMP_DIR", tempfile.gettempdir())
 REQUIRED_PARAMS = {
     "box": ["w", "h", "t"],
     "bracket": ["w", "h", "t", "hole_d"],
+    "star": ["points", "r_out", "r_in", "t"],
 }
 
 
