@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import tempfile
 import uuid
@@ -12,10 +13,19 @@ import cad_builder
 import database
 from models import Generation
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("parts_api")
+
 app = FastAPI(title="Parametric Parts API", version="0.1.0")
 database.init_db()
 
 TMP = os.getenv("TMP_DIR", tempfile.gettempdir())
+
+# обязательные числовые параметры для каждой детали
+REQUIRED_PARAMS = {
+    "box": ["w", "h", "t"],
+    "bracket": ["w", "h", "t", "hole_d"],
+}
 
 
 class GenerateRequest(BaseModel):
@@ -29,14 +39,30 @@ def list_parts():
     return {"parts": list(cad_builder.BUILDERS.keys())}
 
 
+def _validate_params(part: str, params: dict):
+    """Семантическая валидация: ловим невалидные параметры до сборки геометрии."""
+    required = REQUIRED_PARAMS.get(part)
+    if required is None:
+        raise HTTPException(400, f"unknown part: {part}")
+    missing = [k for k in required if k not in params]
+    if missing:
+        raise HTTPException(400, f"missing parameters: {', '.join(missing)}")
+    for key in required:
+        value = params[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+            raise HTTPException(400, f"parameter '{key}' must be a positive number, got {value!r}")
+
+
 @app.post("/generate")
 def generate(req: GenerateRequest, db: Session = Depends(database.get_db)):
     if req.format not in ("step", "stl"):
         raise HTTPException(400, "format must be 'step' or 'stl'")
+    _validate_params(req.part, req.params)
     try:
         part = cad_builder.build(req.part, req.params)
     except Exception as exc:
-        raise HTTPException(400, f"build failed: {exc}")
+        logger.exception("CadQuery build failed: part=%s params=%s", req.part, req.params)
+        raise HTTPException(500, "geometry build failed, see server logs")
 
     suffix = req.format
     filename = f"part_{uuid.uuid4().hex}.{suffix}"
