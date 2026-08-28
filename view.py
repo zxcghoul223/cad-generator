@@ -22,7 +22,11 @@ def main():
     try:
         from ocp_vscode import show
 
-        show(list(parts.values()))
+        # разносим детали по X, чтобы грани не совпадали (иначе z-fighting)
+        spaced = []
+        for i, part in enumerate(parts.values()):
+            spaced.append(part.translate((i * 80, 0, 0)))
+        show(spaced)
     except ImportError:
         print("ocp_vscode не установлен — выполни: pip install ocp-vscode")
         print("или сгенерируй .step через API и открой файл в панели OCP CAD Viewer.")
